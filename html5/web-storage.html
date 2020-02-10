@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>webStorage</title>
+    <style>
+        .btn {
+            width: 100px;
+            height: 30px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    webStorage API 提供了储存机制，通过该机制，浏览器可以安全的存储键值对； <br>
+
+    webStorage包括两种机制 <br>
+    1、sessionStorage 该存储在会话期间可用；<br>
+    2、localStorage 该储存在浏览器关闭之后，下次打开可以继续使用；<br>
+
+    webStorage 拥有的方法：<br>
+    1、setItem; <br>
+    2、getItem；<br>
+    3、removeItem；<br>
+    4、clear；<br>
+
+    webStorage和cookie的区别；<br>
+    1、webStorage拥有更大的储存空间；<br>
+    2、cookie信息每一次请求会传送到服务器；webStorage不会传送到服务器；<br>
+
+    StorageEvent <br>
+    <div class="btn" onclick="setStorage(0)">红</div>
+    <div class="btn" onclick="setStorage(1)">黄</div>
+    <div class="btn" onclick="setStorage(2)">蓝</div>
+    <div class="btn" onclick="setStorage(3)">绿</div>
+
+    <script>
+        const INDEX = 'index';
+        const BG_COLOR = ['red', 'yellow', 'blue', 'green'];
+        const BTN_LIST = document.getElementsByClassName('btn');
+        const getStorage = () => {
+            let rets = window.localStorage.getItem(INDEX);
+            if (!rets) {
+                return -1;
+            }
+            return rets;
+        }
+        const setStorage = val => {
+            window.localStorage.setItem(INDEX, val);
+            render();
+        }
+        const render = () => {
+            let rets = getStorage();
+            for (let i = 0; i < BTN_LIST.length; i++) {
+                document.getElementsByClassName('btn')[i].style.background = '';
+            };
+            let index = rets >= 0
+                ? document.getElementsByClassName('btn')[rets].style.background = BG_COLOR[rets]
+                : document.getElementsByClassName('btn')[0].style.background = 'red';
+        }
+        // StorageEvent 可以用来解决多个tab状态同步问题以及类似问题；
+        // 在不同tab下改变某一个值，其它tab下的页面也进行相应的改变；
+        window.addEventListener('storage', e => {
+            console.log(e);
+            render();
+            // 执行某些操作；
+        })
+        render();
+    </script>
+
+</body>
+</html>
