@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>audio&video</title>
+</head>
+<body>
+    audio 实例 <br>
+    <audio controls>
+        <source src="xxx.ogg" type="audio/ogg">
+        <source src="xxx.mp3" type="audio/mpeg">
+        您的浏览器不支持audio 元素；
+    </audio> <br>
+    controls 属性提供播放、暂停、和音量的控件；<br>
+    在audio标签之间需要插入浏览器不支持的audio元素的提示文本；<br>
+    audio 元素允许使用多个source标签，浏览器将使用第一个支持的文件；<br>
+    audio支持的音频格式有 mp3/mpeg、ogg/ogg、waw/waw; <br>
+
+
+    video 实例 <br>
+    <video id="video" controls width="320" height="240">
+        <source src="xxx.mp4" type="video/mp4">
+        <source src="xxx.ogg" type="video/ogg">
+        您的浏览器不支持video元素
+    </video> <br>
+    <button onclick="playPause()">播放/暂停</button>
+    controls 属性提供播放、暂停、和音量的控件；<br>
+    width\height 来控制视频尺寸，如果设置了高度和宽度，所需的视频空间会在页面加载时保留；反之，浏览器页面在加载过程中会根据
+    视频原始大小来改变；<br>
+    video标签之间也需要插入浏览器不支持video 元素的提示；<br>
+    video 元素允许使用多个source标签，浏览器将使用第一个支持的文件；<br>
+    video 支持的格式mp4、ogg、webM <br>
+
+    audio和video 也可以使用js控制播放、暂停、宽高... <br>
+    <script>
+        const myVidoe = document.getElementById('video');
+        function playPause() {
+            myVidoe.pause ? myVidoe.play() : myVidoe.pause();
+        }
+    </script>
+</body>
+</html>
