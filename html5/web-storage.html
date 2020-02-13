@@ -67,6 +67,38 @@
             // 执行某些操作；
         })
         render();
+
+        // 触发storage变化的本页面，是不能接受e这个值的；
+        // 解决方法：自己创建一个事件，在发生改变时候主动去触发它。
+
+        // 例如：
+        var Storage = {
+            setItem: function(k, v) {
+                localStorage.setItem(k, v);
+            },
+            getItem: function(k) {
+                localStorage,getItem(k);
+            },
+            clear: function() {},
+            removeStorage: function(k) {
+                localStorage.removeItem(k);
+            },
+        }
+        // initStorageEvent(typeArg, canBubbleArg, cancelableArg, key, oldVal, newVal, url, storageArg)
+        // typeArg: 事件名
+        // canBubbleArg: 是否可通过dom冒泡  boolean
+        // cancelableArg: 是否可以注销事件 boolean
+        // key: 对应的属性名；
+        // oldval: 旧值；
+        // newVal: 新值；
+        // url: 事件初始化时页面url；
+        // storageArg: 发生在哪个storage对象上；
+        function dispatchMe(key, oldVal, newVal, url, storage) {
+            var se = document.createEvent('StorageEvent');
+            se.initStorageEvent('storage', false, false, key, oldVal, newVal, url, storage);
+            window.dispatchEvent(se);
+        }
+        // 在setItem、removeItem、clear中获取对应的值，并手动调用dispatchMe,同时把在使用localStorage的地方改为调用我们的新对象即可；
     </script>
 
 </body>
