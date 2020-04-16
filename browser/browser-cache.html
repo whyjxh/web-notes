@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  缓存可以说是性能优化中简单高效的一种优化方式了。一个优秀的缓存策略可以缩短网页请求资源的距离，减少延迟，并且由于缓存文件可以重复利用，还可以减少带宽，降低网络负荷。
+  <br/>
+  对于一个数据请求来说可以分为发起网络请求、后端处理、浏览器响应三个步骤；浏览器缓存可以帮助我们在第一和第三步骤中优化性能；
+  <br/>
+  例如：使用缓存而不发起请求，或者发起了请求但后端存储的数据和前端一致，那么就没有必要在将数据传回来。这样就减少了响应数据。
+  <br />
+  缓存位置；<br />
+  从缓存位置来说分为4种，并各有优先级，当依次查找缓存且都没有命中的时候，才会去请求网络。<br />
+  service Worker | memory Cache | disk Cache | push Cache <br />
+
+  Service Worker 是运行在浏览器背后的独立线程，一般可以用来实现缓存功能。<br/>
+  使用service Worker 的话，传输协议必须为https。因为service Worker中涉及到请求拦截，必须使用https协议来保障安全。service Worker的缓存与浏览器
+  其它的内建的缓存机制不同，它可以让我们自由控制缓存哪些文件、如何匹配缓存、如何读取缓存，并且缓存是持续性的。<br />
+  service Worker实现缓存功能一般分为三个步骤，首先需要注册service Worker，然后监听到install事件以后就可以缓存需要的文件，用户在下次请求的时候就可以
+  通过拦截请求查询是否存在缓存，存在的话就可以使用缓存，否则就去请求数据。<br/>
+
+  Memory Cache 是内存中的缓存，主要包含的是当前页面中已经抓取到的资源，如页面上已经下载的样式、脚本、图片等。<br/>
+  读取内存中的数据肯定比磁盘快，内存缓存虽然读取高效，但可持续性很短，会随着进程的释放而释放。一旦我们关闭tab页面，内存中的缓存也就被释放掉；<br/>
+  计算机的内存容量比磁盘小，所以不是什么数据都可以放内存当中；<br/>
+  当我们访问过页面之后，再次刷新页面，可以发现很多数据都来自于内存缓存 "from memory cache" <br/>
+  内存缓存在缓存资源时并不关心返回资源的http缓存头cache-control是什么值，同时资源的匹配也并非仅仅是对url做匹配，还可能对content-type，cors等作校验<br />
+
+  disk Cache 是存储在硬盘中的缓存，都去速度慢，但是什么都可以存储到磁盘中，比memory cache 胜在存储容量和时效性上；<br/>
+  disk cache 是覆盖面最大的缓存；它会根据 HTTP Herder 中的字段判断哪些资源需要缓存，哪些资源可以不请求直接使用，哪些资源已经过期需要重新请求。<br>
+  浏览器会把哪些文件丢进内存中，哪些放到硬盘中去；
+  对于大文件，大概率是不储存在内存中的，反之优先；当前系统内存使用率高的话，文件优先存储进硬盘；<br>
+  
+  Push Cache（推送缓存）是 HTTP/2 中的内容，当以上三种缓存都没有命中时，它才会被使用。
+  它只在会话（Session）中存在，一旦会话结束就被释放，并且缓存时间也很短暂，在Chrome浏览器中只有5分钟左右，同时它也并非严格执行HTTP头中的缓存指令。<br>
+
+  浏览器对于缓存的处理时根据第一次请求资源时返回的响应头来确定的。
+
+  http缓存有两种方式：强缓存、协商缓存 <br>
+  
+  强缓存：不会向服务器发送请求，直接从缓存中读取，在chrome控制台的Network选项中可以看到该请求返回200的状态码，并且Size显示from disk cache或from memory cache。 <br>
+  强缓存可以通过设置两种 HTTP Header 实现：Expires 和 Cache-Control。<br />
+  Expires 是 HTTP/1 的产物；在响应头返回缓存过期时间，用来指定资源到期的时间，是服务器端的具体的时间点。需要和Last-modified结合使用<br>
+  Expires 是 HTTP/1 的产物，受限于本地时间，如果修改了本地时间，可能会造成缓存失效。<br>
+  在HTTP/1.1中，Cache-Control是最重要的规则，主要用于控制网页缓存。<br>
+  Cache-Control 可以在请求头或者响应头中设置，并且可以组合使用多种指令：<br>
+  public：所有内容都将被缓存（客户端和代理服务器都可缓存）。<br>
+  private：所有内容只有客户端可以缓存，Cache-Control的默认取值<br>
+  no-cache：客户端缓存内容，是否使用缓存则需要经过协商缓存来验证决定。表示不使用 Cache-Control的缓存控制方式做前置验证，而是使用 Etag 或者Last-Modified字段来控制缓存。<br>
+  no-store：所有内容都不会被缓存，即不使用强制缓存，也不使用协商缓存<br>
+  max-age：max-age=xxx (xxx is numeric)表示缓存内容将在xxx秒后失效<br>
+  s-maxage（单位为s)：同max-age作用一样，只在代理服务器中生效（比如CDN缓存）。<br>
+  max-stale：能容忍的最大过期时间。<br>
+  min-fresh：能够容忍的最小新鲜度。<br>
+  Expires和Cache-Control的比较：<br>
+  区别：Expires是http 1.0的、Cache-Control是http 1.1的；两者同时存在的话，Cache-Control优先级药高于Expires <br>
+
+  协商缓存就是强制缓存失效后，浏览器携带缓存标识向服务器发起请求，由服务器根据缓存标识决定是否使用缓存的过程，主要有以下两种情况：<br>
+  协商缓存生效，返回304和Not Modified；不生效的话，返回200和请求结果；<br>
+  协商缓存可以通过设置两种 HTTP Header 实现：Last-Modified 和 ETag 。<br>
+  Last-Modified和If-Modified-Since；<br>
+  浏览器在第一次访问资源时，服务器返回资源的同时，在response header中添加 Last-Modified的header，值是这个资源在服务器上的最后修改时间，浏览器接收后缓存文件和header；
+  浏览器下一次请求这个资源，浏览器检测到有 Last-Modified这个header，于是添加If-Modified-Since这个header，值就是Last-Modified中的值；
+  服务器再次收到这个资源请求，会根据 If-Modified-Since 中的值与服务器中这个资源的最后修改时间对比，如果没有变化，返回304和空的响应体，直接从缓存读取，如果If-Modified-Since的时间小于服务器中这个资源的最后修改时间，说明文件有更新，于是返回新的资源文件和200
+  Last-Modified 存在一些弊端：<br>
+  如果本地打开缓存文件，即使没有对文件进行修改，但还是会造成 Last-Modified 被修改，服务端不能命中缓存导致发送相同的资源<br>
+  因为 Last-Modified 只能以秒计时，如果在不可感知的时间内修改完成文件，那么服务端会认为资源还是命中了，不会返回正确的资源<br>
+  ETag和If-None-Match <br>
+  Etag是服务器响应请求时，返回当前资源文件的一个唯一标识(由服务器生成)，只要资源有变化，Etag就会重新生成。<br>
+  浏览器在下一次加载资源向服务器发送请求时，会将上一次返回的Etag值放到request header里的If-None-Match里，服务器只需要比较客户端传来的If-None-Match跟自己服务器上该资源的ETag是否一致<br>
+  Etag与Last-Modified的区别<br>
+  在精度上Etag要优于Last-Modified，Last-Modified的时间单位是秒，如果某个文件在1秒内改变了多次，那么他们的Last-Modified其实并没有体现出来修改 <br>
+  第二在性能上，Etag要逊于Last-Modified，毕竟Last-Modified只需要记录时间，而Etag需要服务器通过算法来计算出一个hash值。<br>
+  第三在优先级上，服务器校验优先考虑Etag <br>
+
+  缓存机制<br>
+  强制缓存优先于协商缓存进行，若强制缓存(Expires和Cache-Control)生效则直接使用缓存，若不生效则进行协商缓存(Last-Modified / If-Modified-Since和Etag / If-None-Match)，
+  协商缓存由服务器决定是否使用缓存，若协商缓存失效，那么代表该请求的缓存失效，返回200，重新返回资源和缓存标识，再存入浏览器缓存中；生效则返回304，继续使用缓存。<br>
+
+  实际场景<br>
+  频繁变动的资源使用cache-control: no-cache;使浏览器每次都请求服务器，然后配合 ETag 或者 Last-Modified 来验证资源是否有效。
+  这样的做法虽然不能节省请求数量，但是能显著减少响应数据大小。
+  不常变动的资源Cache-Control: max-age=31536000；通常在处理这类资源时，给它们的 Cache-Control 配置一个很大的 max-age=31536000 (一年)，这样浏览器之后请求相同的 URL 会命中强制缓存。
+  而为了解决更新的问题，就需要在文件名(或者路径)中添加 hash， 版本号等动态字符，之后更改动态字符，从而达到更改引用 URL 的目的，让之前的强制缓存失效 (其实并未立即失效，只是不再使用了而已)。<br>
+
+  用户行为对浏览器缓存的影响；
+  1、打开页面；查找disk cache是否有匹配，如有则使用；如果没有；则发送网络请求
+  2、在刷新页面时，优先访问memory cache；其次disk cache。
+  3、强制刷新：不使用缓存；
+</body>
+</html>
