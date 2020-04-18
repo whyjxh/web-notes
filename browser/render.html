@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>浏览器渲染原理</title>
+</head>
+<body>
+    浏览器的内核是指浏览器运行的核心部分，分为两个部分，一个是渲染引擎，另一个是js引擎；<br>
+
+    一个网页加载的过程；<br>
+    1、浏览器根据dns服务器解析得到域名的ip地址；<br>
+    2、浏览器向这个ip的机器发送http请求；<br>
+    3、服务器接受到请求，处理并且返回http请求；<br>
+    4、浏览器得到返回的内容<br>
+    5、浏览器开始渲染<br>
+
+    浏览器渲染过程<br>
+    1、浏览器解析HTML、CSS、JS得到DOM Tree、cssom <br>
+    2、解析完成之后，浏览器引擎会通过DOM Tree和CSS RULE Tree 来构建render Tree。 <br>
+    3、通过调用系统GUI的 API绘制； <br>
+
+    构建DOM树<br>
+    1、浏览器从磁盘或者网络读取HTML的原始字节，并且根据指定的编码将它们转换成字符串<br>
+    2、将字符串转换为token <br>
+    3、生成节点对象并构建DOM
+
+    构建渲染树<br>
+    渲染树只会包括需要显示的节点和这些节点的样式信息；<br>
+    在构建渲染树中遇到js文件会停止渲染优，先执行js代码；<br>
+    如果js代码中会去改变样式，浏览器就会先下载构建cssom，然后在执行js、最后在继续构建DOM；<br>
+
+    布局与绘制<br>
+    当浏览器生成渲染树以后，就会根据渲染树来进行布局。
+
+    script中defer、async的区别<br>
+    都是异步执行<br>
+    async会异步下载js文件。加载完成之后立刻执行；是无顺序加载；<br>
+    defer在加载完成之后，会等html解析完成后执行js代码；有顺序加载；<br>
+
+    重绘和回流（重排）；<br>
+    重绘：当我们对DOM的修改导致样式发生了变化，几何属性未发生变化，浏览器直接为该元素绘制样式；<br>
+    回流：当元素的几何属性发生变化时，浏览器需要重新计算该元素的属性；<br>
+    回流一定引起重绘；重绘不一定引起回流；<br>
+
+    渲染优化策略；<br>
+    js优化：script脚本加defer属性或者async属性；<br>
+    css优化；在link标签的rel属性设置为preload能够让你在你的HTML页面指定哪些资源在页面加载完成后即可需要的；即是配置加载顺序<br>
+
+    总结<br>
+    浏览器输入url的工作流程：根据dns解析出ip -> tcp三次握手 -> 浏览器给该ip发送请求 -> 服务器处理请求 -> 浏览器收到信息并进行渲染 -> 构建DOM -> 构建CSSOM -> 渲染树 -> 布局 -> 绘制 -> tcp四次挥手 <br>
+
+</body>
+</html>
