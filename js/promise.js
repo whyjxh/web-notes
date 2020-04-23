@@ -125,3 +125,100 @@ Promise.prototype.then = function(fulfiled, rejected) {
         })
     }
 }
+
+/**
+ * class 模拟promise
+ */
+new Promise((resolve, reject) => {
+    resolve();
+});
+// 1、promise的声明；
+// 2、promise状态问题；
+// 3、then方法里注册的回调；
+// 4、解决链式调用；
+/**
+ * 创建一个新的promise，用来在then里返回
+ * 如果是普通值；直接resolve();
+ * 如果是对象，并且没有then属性也直接返回；
+ * 如果有对象有then属性；就执行拿到的then；获取结果，返回；
+ */
+class Promise {
+    constructor(executor) {
+        this.status = 'pending';
+        this.value = undefined;
+        this.reason = undefined;
+        this.onResolveCallbacks = [];
+        this.onRejectCallbacks = [];
+        let resolve = data => {
+            if (this.status === 'pending') {
+                this.status === 'fulfilled';
+                this.value === data;
+                this.onResolveCallbacks.forEach(fn => fn());
+            }
+        }
+        let reject = data => {
+            if (this.status === 'pending') {
+                this.status === 'rejected';
+                this.reason === data;
+                this.onRejectCallbacks.forEach(fn => fn());
+            }
+        }
+        try {
+            executor(resolve, reject);
+        } catch (err) {
+            reject(err);
+        }
+    }
+    
+    then(onFulfilled, onRejected) {
+        let promise2 = new Promise((resolve, reject) => {
+            if (this.status === 'fulfilled') {
+                let x = onFulfilled(this.value);
+                resolvePromise(promise2, x, resolve, reject);
+            }
+            if (this.status === 'rejected') {
+                let x = onRejected(this.reason);
+                resolvePromise(promise2, x, resolve, reject);
+            }
+            if (this.status === 'pending') {
+                this.onResolveCallbacks.push(() => {
+                    let x = onFulfilled(this.value);
+                    resolvePromise(promise2, x, resolve, reject);
+                })
+                this.onRejectCallbacks.push(() => {
+                    let x = onRejected(this.reason);
+                    resolvePromise(promise2, x, resolve, reject);
+                })
+            }
+        })
+        return promise2;
+    }
+}
+function resolvePromise(promise2, x, resolve, reject) {
+    if (x === promise2) {
+        return reject('xxxx');
+    }
+    let called;
+    if (x != null && (typeof x === 'object' || typeof x === 'function')) {
+        try {
+            let then = x.then;
+            if (typeof then === 'function') {
+                then.call(x, y => {
+                    if (called) return;
+                    called = true;
+                    resolvePromise(promise2, y, resolve, reject);
+                }, err => {
+                    if (called) return;
+                    called = true;
+                    reject(err);
+                })
+            } else {
+                resolve(x);
+            }
+        } catch (err) {
+            reject(err);
+        }
+    } else {
+        resolve(x);
+    }
+}
