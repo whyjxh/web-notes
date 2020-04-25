@@ -82,6 +82,9 @@ var b = new B();
  * es6 class
  * supper parent.call(this);
  * constructor 构造函数；
+ * 
+ * child.__proto__ === parent;
+ * child.prototype.__proto__ = parent.__proto__;
  */
 
 /**
