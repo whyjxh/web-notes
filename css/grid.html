@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .grid {
+            width: 300px;
+            height: 300px;
+            border: 1px solid red;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr;
+            grid-template-areas: 
+                "longxia putao putao"
+                "longxia yangyu yangyu"
+                "xigua xigua xigua";
+            /* grid-template: 
+                '龙虾 葡萄 葡萄' 1fr
+                '龙虾 养鱼 养鱼' 1fr
+                '西瓜 西瓜 西瓜' 1fr
+                /1fr 1fr 1fr; */
+            /* grid-column-gap: 10px; */
+            /* grid-row-gap: 10px; */
+            /* grid-gap: 10px 10px; */
+            /*justify-items: start;*/ /* 水平呈现方式 stretch start end center */
+            /*align-items: start; /* 垂直呈现方式 stretch start end center */
+            /* place-items: start start; align-items/justify-items */
+            /*justify-content: start; /* 水平的对齐方式；在有空余空间时起作用 */
+            /*align-content: start; /* 垂直的对齐方式；在有空余空间时起作用 */
+            /* place-content: align-content/justify-content */
+        }
+        .longxia {
+            grid-area: longxia;
+        }
+        .putao {
+            grid-area: putao;
+        }
+        .yangyu {
+            grid-area: yangyu;
+        }
+        .xigua {
+            grid-area: xigua;
+        }
+        /*
+            在grid布局中，float、display: inline-block,vertical-align这些属性和声明对grid子项是没有任何作用的。面试题；
+            grid适合适用于大规模的的布局，flex布局适合组件和小规模布局；
+        */
+    </style>
+</head>
+<body>
+    <div class="grid">
+        <div class="longxia"></div>
+        <div class="putao"></div>
+        <div class="yangyu"></div>
+        <div class="xigua"></div>
+    </div>
+</body>
+</html>
