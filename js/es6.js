@@ -40,6 +40,60 @@ function compose(...args) {
     }
 }
 /**
+ * 数组去重
+ */
+function unique(arr) {
+    let newArr = [];
+    for(var i = 0; i < arr.length; i++) {
+        var flag = false;
+        for(var j = 0; j < newArr.length; j++) {
+            if(arr[i] === arr[j]) {
+                flag = true;
+                break;
+            }
+        }
+        if (!flag) {
+            newArr.push(arr[i]);
+        }
+    }
+    return newArr;
+}
+function unique(arr) {
+    return arr.filter((item, index) => {
+        return arr.indexOf(item) === index;
+    })
+}
+function unique(arr) {
+    return arr.sort().reduce((prev, next) => {
+        if (prev.length === 0 || prev[prev.length - 1] !== next) {
+            prev.push(next);
+        }
+        return prev;
+    }, [])
+}
+function unique(arr) {
+    const newArr = [];
+    const tmp = {};
+    for(var i = 0; i < arr.length; i++) {
+        if (!tmp[typeof arr[i] + JSON.stringify(arr[i])]) {
+            tmp[typeof arr[i] + JSON.stringify(arr[i])] = true;
+            newArr.push(arr[i]);
+        }
+    }
+    return newArr;
+}
+function unique(arr) {
+    const newArr = [];
+    const map = new Map();
+    for(var i = 0; i < arr.length; i++) {
+        if (!map.has(arr[i])) {
+            map.set(arr[i], true);
+            newArr.push(arr[i])
+        }
+    }
+    return arr;
+}
+/**
  * var\let\const的区别
  * var存在变量提升、let/const不存在；
  * var全局定义附在window上、let/const不会；
