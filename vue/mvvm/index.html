@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    vue的mvvm实现机制；<br>
+    1、实现obervse数据劫持，使用Object.definePrototype的getter和setter来监听数据；<br>
+        在getter中订阅watcher；setter的时候触发更新视图；<br>
+    2、实现compile编译模版指令；<br>
+    3、实现watcher来做为连接compile和observe的桥梁；<br>
+        执行watche中的update方法来更新视图；<br>
+    4、实现Dep订阅器；<br>
+        add添加订阅方法；触发事件方法；<br>
+    5、实现mvvm的入口函数；<br>
+</body>
+</html>
