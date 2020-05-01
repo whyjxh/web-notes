@@ -22,11 +22,13 @@
         2、计算rem的值，用设计给定的px值 / html元素的font-size的值；比如设计稿给的是750，html的font-size就是 750 / 10，也就是75px；
         <!-- document.documentElement.style.fontSize = document.documentElement.clientWidth / 10 + 'px'; -->
         3、布局时的rem就是 设计稿的标注 / 设计镐的横向分辨率 / 10；也就是 设计稿的标注 / html的font-size值；
+        viewport设置scale可以解决1px问题；
     </div>
 
     <div>
         对比<br>
         共同点<br>
+        都是相对于html的font-size计算的；<br>
         都能适配所有的手机设备；对于pad，都是使用pc页面，不在使用触屏版的页面；<br>
         都要动态设置font-size；<br>
         布局时各元素的尺寸值都是根据设计稿标注计算出来，由于html的font-size是动态调整的，所以能做到不同分辨率下页面布局呈现等比变化；<br>
