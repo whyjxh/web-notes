@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1, minimum-scale=1">
+    <title>移动端布局方案</title>
+</head>
+<body style="width: 6.4rem;">
+    <div>方案一</div>
+    <div>
+        取font-size为100为参照，用设计稿的横向分辨 / 100 做为body的宽度（记为固定比例）;<br>
+        之后在屏幕分辨率变化的时候，用屏幕横向分辨率 / 固定比例；做为html的font-size；<br>
+        在后续使用rem的时候，用设计稿的宽度 / html的font-size的值；<br>
+        视口要设置为'<meta name="viewport" content="initial-scale=1,maximum-scale=1, minimum-scale=1">'
+    </div>
+    <div>方案二</div>
+    <div>
+        以淘宝的flexable为例；<br>
+        1、需要动态设置视口的缩放比例（viewport 的 scale）；在手机变化之下动态计算设置scale的值；为了保证屏幕永远和设计稿宽度一样<br>
+        <!-- var scale = 1 / devicePixelRatio;
+            document.querySelector('meta[name="viewport"]').setAttribute('content','initial-scale=' + scale + ', maximum-scale=' + scale + ', minimum-scale=' + scale + ', user-scalable=no'); -->
+        2、计算rem的值，用设计给定的px值 / html元素的font-size的值；比如设计稿给的是750，html的font-size就是 750 / 10，也就是75px；
+        <!-- document.documentElement.style.fontSize = document.documentElement.clientWidth / 10 + 'px'; -->
+        3、布局时的rem就是 设计稿的标注 / 设计镐的横向分辨率 / 10；也就是 设计稿的标注 / html的font-size值；
+    </div>
+
+    <div>
+        对比<br>
+        共同点<br>
+        都能适配所有的手机设备；对于pad，都是使用pc页面，不在使用触屏版的页面；<br>
+        都要动态设置font-size；<br>
+        布局时各元素的尺寸值都是根据设计稿标注计算出来，由于html的font-size是动态调整的，所以能做到不同分辨率下页面布局呈现等比变化；<br>
+        容器元素的font-size都不用rem，需要额外的font-size做媒体查询；<br>
+        
+        不同点；<br>
+        淘宝需要动态设置viewport的scale；网易不用；<br>
+        <!-- 
+            使用less；
+            @baseFontSize: 75; // 基于设计稿横向分辨率 / 100 得出基准的font-size；
+            .px2rem(@name, @px) {
+                @{name}: @px / @baseFontSize * 1rem;
+            }
+
+            使用示例；
+            .container {
+                .px2rem(height, 240);
+            }
+            相当于
+            .container {
+                height: 3.2rem;
+            }
+         -->
+
+    </div>
+    <script>
+        let client = document.documentElement.clientWidth / 6.4;
+        document.documentElement.style.fontSize = client + 'px';
+        window.onresize = function () {
+            // 假设设计稿是640的
+            let client = document.documentElement.clientWidth / 6.4;
+            document.documentElement.style.fontSize = client + 'px';
+        }
+    </script>
+</body>
+</html>
