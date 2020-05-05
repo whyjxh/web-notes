@@ -84,7 +84,7 @@ var b = new B();
  * constructor 构造函数；
  * 
  * child.__proto__ === parent;
- * child.prototype.__proto__ = parent.__proto__;
+ * child.prototype.__proto__ = parent.prototype;
  */
 
 /**
