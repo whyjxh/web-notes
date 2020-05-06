@@ -83,7 +83,7 @@ module.exports = {
   },
   plugins: [
     new ExtractTextWebpackPlugin({
-      filename: "[name].[index].[hash].js"
+      filename: "[name].js"
     }),
     new miniCssExtractPlugin({
       filename: 'focus.index.[contenthash:8].css'
