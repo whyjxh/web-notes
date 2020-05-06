@@ -28,4 +28,29 @@
  *   flag ? index.use() : index.unuse();
  * 8、处理sass
  *   npm install sass-loader node-sass css-loader style-loader autoprefixer -D
+ * 9、提取css文件
+ *   mini-css-extract-plugin  webpack 4.0以上 
+ *   npm install extract-text-webpack-plugin@next -D  webpack 4.0
+ *   extract-text-webpack-plugin webpack 4.0以下；
+ * 10、输出html
+ *   npm install html-webpack-plugin -D
+ * 11、处理第三方库，暴露全局变量
+ *   webpack.ProvidePlugin    以jquery为例；
+ * 12、code splitting、懒加载（按需加载）
+ *   import(\/\*webpackChunkName:'name' \*\/'./index.js')
+ * 13、js tree shaking
+ *   webpack 4.0之前 npm install uglifyjs-webpack-plugin -D;
+ *   webpack 4.0以上 --mode production
+ * 14、图片处理
+ *   npm install file-loader url-loader -D
+ *   file-loader 解决css等文件引入图片路径的问题
+ *   url-loader 当图片较小时会把图片转为base64编码，大雨limit参数时，使用过file-loader处理
+ * 15、clean Plugin and Watch Mode
+ *   清空文件 npm install clean-webpack-plugin -D
+ *   watch mode  webpack --watch
+ * 16、区分环境变量
+ *   webpack.DefinePlugin({
+ *      NOOD_ENV: JSON.stringify(process.env.NOOD_ENV)
+ *   })
+ * 17、开发模式与webpack-dev-server、proxy
  */
