@@ -14,4 +14,11 @@ function renderWithHotReload(Router) {
         document.getElementById("app")
     );
 }
-renderWithHotReload();
+renderWithHotReload(Router);
+
+if (module.hot) {
+    module.hot.accept("./router/index.js", () => {
+        const Router = require("./router/index");
+        renderWithHotReload(Router);
+    })
+}
