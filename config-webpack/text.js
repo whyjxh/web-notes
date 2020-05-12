@@ -20,6 +20,10 @@
  * 4、打包js
  * 5、支持es6、react、vue
  *   npm install @babel/core babel-loader @babel/preset-env @babel/preset-react -D
+ *   按需加载polyfill  npm i core-js@2 @babel/runtime-corejs2 -S
+ *   {
+ *      "presets": [{"useBuiltIns": "usage"}]
+ *   }
  * 6、处理css、scss，以及css3属性前缀
  *   处理css npm install style-loader css-loader postcss-loader autoprefixer -D
  * 7、动态加载和卸载css
@@ -53,4 +57,171 @@
  *      NOOD_ENV: JSON.stringify(process.env.NOOD_ENV)
  *   })
  * 17、开发模式与webpack-dev-server、proxy
+ * 
+ * 18、使用HotModuleReplacement(热模块替换HMR)；需要react-hot-loader
+ *      npm install react-hot-loader -D
+ *      1、在主文件中写；
+ *          import { AppContainer } from 'react-hot-loader';
+ *          render(Router);
+ *          if(module.hot) {
+ *              module.hot.accept("./router/index.js", () => {
+ *                  const Router = require("./router/index.js");
+ *                  render(Router);
+ *              })
+ *          }
+ *      devServer: {
+ *          hot: true    
+ *      }
+ *      plugins: [
+ *          new webpack.HotModuleReplacementPlugin()
+ *      ]
+ */
+/**
+ * webpack优化
+ */
+/**
+ * 1、配置别名&指定扩展名
+ * resolve: {
+ *      extension: ["", "js", "jsx"], 文件扩展名；
+ *      alias: {
+ *          "@": path.join(__dirname, "src"),
+ *          pages: path.join(__dirname, "src/pages"),
+ *          router: path.join(__dirname, "src/router")
+ *      }
+ * }
+ */
+/**
+ * 使用静态资源路径 publicPath (CDN)
+ * output: {
+ *      publicPath: "https://www.lagoustatic.com/kw-web-fed/dist/static"
+ * }
+ */
+/**
+ * min-css-extract-plugin 抽取css文件；把css单独打包成一个文件；可以和js并行下载；
+ * npm install mini-css-extract-plugin -D
+ * const miniCssExtractPlugin = require('mini-css-extract-plugin');
+ * use: [
+ *      miniCssExtractPlugin.loader,
+ *      ...
+ * ]
+ * 
+ * new miniCssExtractPlugin({
+ *      filename: '[name].css',
+ *      chunkFilename: '[id].css'
+ * })
+ */
+/**
+ * 代码分割按需加载，提取公共代码
+ * optimization: {
+ *      splitChunks: {
+ *          chunks: 'all',  // 所有的chunks代码公共部分分离出来成为一个单独的文件；
+ *      }
+ * }
+ */
+/**
+ * 文件压缩
+ * webpack 4.0 只要在生产环境下，自动压缩代码；
+ */
+/**
+ * 暴露全局变量
+ * new webpack.providePlugin({
+ *      $: 'jquery',  // npm
+ *      jQuery: 'jQuery' // 本地jquery
+ * })
+ */
+/**
+ * 指定环境，定义环境变量
+ * new webpack.DefinePlugin({
+ *      NOOD_ENV: JSON.stringify(process.env.NOOD_ENV)
+ * })
+ */
+/**
+ * css Tree Shaking 清楚无用的css代码
+ * npm install glob-all purify-css purifycss-webpack -S;
+ * const PurifyCss = require('purifycss-webpack);
+ * const glob = require('glob-all);
+ * plugins: [
+ *      // 清楚无用css
+ *      new PurifyCss({
+ *          paths: glob.sync([
+ *              // 要做css tree shaking的文案
+ *              path.resolve(__dirname, './src/*.html'),
+ *              path.resolve(__dirname, './src/*.js')
+ *          ])
+ *      })
+ * ]
+ */
+/**
+ * js tree shaking 清楚无用的js代码；只支持import引入，不支持commonjs引入；
+ * 只要在生产环境就会生效；
+ * optimizition: {
+ *      useExports: true
+ * }
+ */
+/**
+ * DLLPlugin插件打包第三方类库；
+ * 项目中基本不会更新的库放到dll中来提高打包速度；当需要某个模块时，且在这个模块在dll文件中，就不会在打包，会去dll文件中查找；
+ * webpack.DllPlugin
+ * npm install add-asset-html-webpack-plugin -D
+ * new addAssetHtmlWebpackPlugin({
+ *      filepath: path.resolve(__dirname, '../dll/jquery.dll.js') // 将打包好的dll.js 注入到html中；
+ * })
+ * webpack.DllReferencePlugin({
+ *      manifest: path.resolve(__dirname, '..', 'dll/xxx-manifest.json')
+ * })
+ */
+/**
+ * 使用happypack并发执行任务 多线程执行；
+ * npm install happypack -D;
+ * rules: [
+ *      {
+ *          test: /\.jsx?$/,
+ *          use: [
+ *              loader: "happypack/loader?id=busongBabel" // 一个loader对应一个id
+ *          ]
+ *      }
+ * ]
+ * 
+ * new happyPack({
+ *      id: 'busongBabel',
+ *      loaders:['babel-loader?cacheDirectory'],
+ *      threadPool: HappyPackThreadPool,
+ * })
+ */
+/**
+ * PWA优化策略
+ * npm install workbox-webpack-plugin -D
+ * 
+ * const WorkboxPlugin = require('workbox-webpack-plugin'); // 引入pwa插件
+ * const prodConfig = {
+ *      plugins: [
+ *          new WorkboxPlugin.GenerateSW({
+ *              clientsClaim: true,
+ *              skipWaiting: true
+ *          })
+ *      ]
+ * }
+ * 
+ * 在入口文件加上
+ * 
+ * // 判断该浏览器支不支持 serviceWorker
+ * if ('serviceWorker' in navigator) {
+ *      window.addEventListener('load', () => {
+ *          navigator.serviceWorker
+ *          .register('/service-worker.js')
+ *          .then(registration => {
+ *              console.log('service-worker registed')
+ *          })
+ *          .catch(error => {
+ *              console.log('service-worker registed error')
+ *          })
+ *      })
+ *   }
+ */
+/**
+ * 合并提取webpack公共配置
+ * webpack-merge
+ */
+/**
+ * 分离配置文件
  */
