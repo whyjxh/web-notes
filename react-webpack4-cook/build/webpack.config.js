@@ -2,6 +2,9 @@ const path = require('path');
 const { cleanWebpackPlugin } = require('clean-webpack-plugin');
 const htmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
+const miniCssExtractPlugin = require('mini-css-extract-plugin');
+const purifyCss = require('purifycss-webpack');
+const glob = require('glob-all');
 
 const rootDir = path.join(__dirname, '..');
 const env = process.env.NOOD_ENV === 'development';
@@ -13,14 +16,15 @@ module.exports = {
         path: path.join(rootDir, 'dist/static/js'),
         filename: 'bundle.js',
         chunkFilename: '[name].js',
-        publicPath: env ? '../dist/js' : 'https://www.lgstatic.com/kw-web-fed/dist/static/js'
+        publicPath: env ? '../dist/static/' : 'https://www.lgstatic.com/kw-web-fed/dist/static/'
     },
     module: {
         rules: [
             {
                 test: /\.less$/,
                 use: [
-                    "style-loader",
+                    // "style-loader",
+                    miniCssExtractPlugin.loader,
                     "css-loader",
                     "postcss-loader",
                     "less-loader"
@@ -59,8 +63,23 @@ module.exports = {
             filename: 'index.html',
             template: path.resolve(__dirname, "../src/index.html")
         }),
-        new webpack.HotModuleReplacementPlugin()
+        new webpack.HotModuleReplacementPlugin(),
+        new miniCssExtractPlugin({
+            filename: '[index].[hash:8].css',
+            chunkFilename: '[id].[hash: 8].css'
+        }),
+        new purifyCss({
+            paths: glob.sync([
+                path.resolve(__dirname, '../src/*.html'),
+                path.resolve(__dirname, '../src/*.js')
+            ])
+        })
     ],
+    optimization: {
+        splitChunks: {
+            all: 'all'
+        }
+    },
     devServer: {
         contentbase: path.resolve(__dirname, "../dist"),
         hot: true,
