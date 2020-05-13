@@ -24,3 +24,39 @@
  * @babel/plugin-transform-runtime -D
  * @babel/runtime -S
  */
+/**
+ * vue、react组件懒加载
+ * babel-plugin-dynamic-import-webpack
+ * babel-plugin-syntax-dynamic-import
+ * 解析import动态加载；
+ * "plugins": ["syntax-dynamic-import"] || ["dynamic-import-webpack"]
+ * 
+ * element-ui 按需加载
+ * [
+ *    "plugins": [
+ *        [
+ *          "component",
+ *          {
+ *            "libraryName": "element-ui",
+ *            "styleLibraryName": "theme-chalk"
+ *          }
+ *        ]
+ *    ]
+ * ]
+ * babel-plugin-component
+ * 
+ * antd 按需加载
+ * babel-plugin-import
+ * [
+ *    "plugins": [
+ *        [
+ *          "import",
+ *          {
+ *            "libraryName": "antd",
+ *            "libraryDirectory": 'es',
+ *            "style": true
+ *          }
+ *        ]
+ *    ]
+ * ]
+ */
