@@ -225,3 +225,102 @@
 /**
  * 分离配置文件
  */
+
+/**
+ * 打包优化：
+ * 1、loader固定文件范围；
+ * 2、happypack多进程打包； loader 解析
+ * 3、DllPlugin; add-asset-html-webpack-plugin 搭载add-asset-html-plugin 可以把dll文件链如html
+ * 4、加缓存；
+ */
+/**
+ * 加载优化
+ * 1、cdn服务器
+ * 2、minicssextractplugin 提取css文件；加载css文件
+ * 3、代码分割，按需加载；
+ * 4、文件压缩
+ * 5、css tree shaking、js tree shaking；
+ * 6、DllPlugin
+ * 7、sideEffects: false,
+ */
+
+ /**
+  * css
+  * OptimizeCSSAssetsPlugin 对css进行代码压缩合并；
+  * css-hot-loader css热更新；
+  */
+
+ /**
+  * 代码分割
+  * code split js
+  * 4.0以上
+  * webpack-parallel-uglify-plugin 多进程压缩js；
+  * const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin');
+  * optimization: {
+  *     minimizer: [
+  *         new ParallelUglifyPlugin({
+  *             cacheDir: '.cache/',
+  *             uglifyJS: {
+  *                 output: {
+  *                     comments: false,
+  *                     beautify: false
+  *                 },
+  *                 compress: {
+  *                     warnings: false,
+  *                     drop_console: true,
+  *                     collapse_vars: true,
+  *                     reduce_vars: true
+  *                 }
+  *             }
+  *         })
+  *     ], // 压缩
+  *     splitChunk: {
+  *         chunks: 'async', // all:所有模块 、 initial:对同步模块 、 async: 对异步模块
+  *         minSize: 3000, // 合并前模块文件的体积
+  *         minChunks: 2, //最少被引用的次数
+  *         maxAsyncRequests: 5,
+  *         maxInitialRequests: 3,
+  *         automaticNameDelimiter: '~',
+  *         cacheGroup: {
+  *             vendors: {
+  *                 test: /[\\/]node_modules[\\/]/,
+  *                 minChunks: 1,
+  *                 priority: -10 // 优先级最高
+  *             },
+  *             default: {
+  *                 test: /[\\/]src[\\/]js[\\/]]/,
+  *                 minChunks: 2, // 非第三方公共模块
+  *                 priority: -20,
+  *             }
+  *         },
+  *     },
+  *     runtimeChunk: {
+  *         name: 'manifest'
+  *     }
+  * }
+  * 4.0一下
+  * new webpack.optimize.CommonsChunkPlugin({
+  *     name: 'vender',
+  *     minChunks: ({resource}) => {
+  *         resource && resource.indexOf('node_modules') >= 0 && resource.match(/\.js/)
+  *     }
+  * })
+  * new webpack.optimize.CommonsChunkPlugin({
+        async: 'common-in-lazy',
+        minChunks: ({ resource } = {}) => (
+            resource &&
+            resource.includes('node_modules') &&
+            /axios/.test(resource)
+        ),
+    })
+    new webpack.optimize.CommonsChunkPlugin({
+        async: 'used-twice',
+        minChunks: (module, count) => (
+            count >= 2
+        ),
+    })
+  */
+
+/**
+ * 代码分割是为了分离出三方依赖的库；
+ */
