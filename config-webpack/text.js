@@ -341,7 +341,7 @@
 
 
 /**
- * scope Hoisting 作用域合并；把作用域合并到一个文件中；
+ * scope Hoisting 作用域合并/作用域提升；把作用域合并到一个文件中；
  * ModuleConcatenationPlugin = require('webpack/lib/optimize/ModuleConcatenationPlugin);
  * new ModuleConcatenationPlugin(); 开启scope hoisting
  * 
