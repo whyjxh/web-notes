@@ -232,6 +232,7 @@
  * 2、happypack多进程打包； loader 解析
  * 3、DllPlugin; add-asset-html-webpack-plugin 搭载add-asset-html-plugin 可以把dll文件链如html
  * 4、加缓存；
+ * 5、webpack-parallel-uglify-plugin
  */
 /**
  * 加载优化
@@ -256,6 +257,7 @@
   * 4.0以上
   * webpack-parallel-uglify-plugin 多进程压缩js；
   * const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin');
+  * workerCount 配置几个进程压缩；默认为电脑的cpu数减1；
   * optimization: {
   *     minimizer: [
   *         new ParallelUglifyPlugin({
@@ -323,4 +325,29 @@
 
 /**
  * 代码分割是为了分离出三方依赖的库；
+ */
+
+/**
+ * vue-loader v15 以后需要在webpack中添加 vueLoaderPlugin
+ * const { VueLoaderPlugin } = require('vue-loader');
+ * plugins: [
+ *      new VueLoaderPlugin();
+ * ]
+ */
+
+/**
+ * copy-webpack-plugin 拷贝静态文件到dist文件夹
+ */
+
+
+/**
+ * scope Hoisting 作用域合并；把作用域合并到一个文件中；
+ * ModuleConcatenationPlugin = require('webpack/lib/optimize/ModuleConcatenationPlugin);
+ * new ModuleConcatenationPlugin(); 开启scope hoisting
+ * 
+ * 因为 scope hoisting 依赖源码需采用es6模块语法；还需要配置 mainFiedlds;
+ * 因为大部分npm中的第三方库采用了Commonjs，但是少部分会提供es6模块化的代码；
+ * resolve: {
+ *      mainFields: ["jsnext:main", "browser", "main"]
+ * }
  */
