@@ -26,3 +26,23 @@
  * 3、接口设置禁止跨域；
  * 4、请求时附带验证信息，比如验证码或者token；
  */
+
+/**
+ * keep-live 是持久连接，避免了tcp的连接和断开；节省了开销；
+ */
+/**
+ * http头字段
+ * accept
+ * accept-charset
+ * age
+ * cache-control
+ * connection
+ * content-length
+ * content-encoding
+ * etag
+ * expired
+ * host
+ * last-modified
+ * if-modified-since
+ * if-none-match
+ */
