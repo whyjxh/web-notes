@@ -80,5 +80,5 @@ let seelp = timer => new Promise(res => {
         }
         console.log(i);
     }
-})() 
+})()
 
