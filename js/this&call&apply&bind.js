@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2021-01-25 14:50:46
+ * @LastEditTime: 2021-02-02 16:45:56
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \web-notes\js\this&call&apply&bind.js
+ */
 /**
  * this指向问题
  * 1、全局调用；this -> window
@@ -20,10 +28,11 @@
 // call实现的方法
 Function.prototype.call2 = function() {
     let [context, ...arg] = [...arguments];
+    context = context || window;
     context.fn = this;
     let result = context.fn(...arg);
     delete context.fn;
-    return typeof result !== 'undefined' ? result : undefined;
+    return result || undefined;
 }
 // apply实现方法
 Function.prototype.apply2 = function() {
@@ -31,7 +40,7 @@ Function.prototype.apply2 = function() {
     context.fn = this;
     let result = context.fn(...arg);
     delete context.fn;
-    return typeof result !== 'undefined' ? result : undefined;
+    return  result || undefined;
 }
 // bind 实现方法
 Function.prototype.bind2 = function(context) {
